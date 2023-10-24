@@ -1,0 +1,44 @@
+#include <LiquidCrystal.h>
+
+// Define the analog pin for the pH sensor
+const int pHSensorPin = A0;
+
+// Initialize the LCD
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+void setup() {
+  // Initialize the LCD screen
+  lcd.begin(16, 2);
+  lcd.print("Water Quality");
+}
+
+void loop() {
+  // Read the pH value from the sensor
+  float pHValue = readPHValue();
+
+  // Display the pH value on the LCD
+  lcd.setCursor(0, 1);
+  lcd.print("pH: ");
+  lcd.print(pHValue, 2);
+
+  // Check the water quality based on pH
+  if (pHValue < 6.5) {
+    lcd.print(" (Acidic)");
+  } else if (pHValue > 7.5) {
+    lcd.print(" (Alkaline)");
+  } else {
+    lcd.print(" (Neutral)");
+  }
+
+  // Delay for a moment before the next reading
+  delay(2000);
+}
+
+float readPHValue() {
+  // Read analog voltage from the pH sensor
+  int sensorValue = analogRead(pHSensorPin);
+
+  // Convert the sensor value to pH using your sensor's calibration data
+  float pH = map(sensorValue, 0, 1023, 0, 14); // Adjust the mapping as per your sensor's specifications
+  return pH;
+}
